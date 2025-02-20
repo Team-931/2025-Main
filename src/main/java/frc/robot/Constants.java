@@ -53,5 +53,10 @@ public final class Constants
   public static class ElevatorConstants {
     public static final int LMotorID = 1;
     public static final int RMotorID = 2;
+    public static final double Level1 = 12.5; //Inches.
+    public static final double Level2 = 25;
+    public static final double Level3 = 37.5;
+    public static final double Level4 = 50;
+
   }
 }
