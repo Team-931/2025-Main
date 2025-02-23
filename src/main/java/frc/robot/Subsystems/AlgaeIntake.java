@@ -24,14 +24,15 @@ public class AlgaeIntake extends SubsystemBase {
   private final SparkMax leftMotor;
   private final SparkMax rightMotor;
 
+  private final SparkClosedLoopController leftPID;
+  private final SparkClosedLoopController rightPID;
   /** Creates a new AlgaeIntake. */
   public AlgaeIntake() {
     leftMotor = new SparkMax(AlgaeConstants.leftMotorID, MotorType.kBrushless);
     rightMotor = new SparkMax(AlgaeConstants.rightMotorID, MotorType.kBrushless);
 
-    SparkClosedLoopController leftPID = leftMotor.getClosedLoopController();
-    SparkClosedLoopController rightPID = rightMotor.getClosedLoopController();
-    
+    leftPID = leftMotor.getClosedLoopController();
+    rightPID = rightMotor.getClosedLoopController();
 
     SparkMaxConfig leftConfig = new SparkMaxConfig();
     SparkMaxConfig rightConfig = new SparkMaxConfig();
@@ -59,16 +60,17 @@ public class AlgaeIntake extends SubsystemBase {
     
   }
 
-  // public Command in(){
-  //   return runOnce(()-> leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity).and(rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity))).until(isAlgae());
+  public Command in(){
+    return runOnce(()-> wheelsIn()).until(isAlgae());
 
-  // }
+  }
 
   public BooleanSupplier isAlgae(){
     return ()-> false; //Come back and edit this later
   }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+
+  private void wheelsIn() {
+    leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
+    rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
   }
 }
