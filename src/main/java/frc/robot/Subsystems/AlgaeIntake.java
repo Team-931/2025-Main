@@ -59,10 +59,10 @@ public class AlgaeIntake extends SubsystemBase {
     
   }
 
-  public Command in(){
-    return runOnce(()-> leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity).and(rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity))).until(isAlgae());
+  // public Command in(){
+  //   return runOnce(()-> leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity).and(rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity))).until(isAlgae());
 
-  }
+  // }
 
   public BooleanSupplier isAlgae(){
     return ()-> false; //Come back and edit this later
