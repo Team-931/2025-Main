@@ -27,8 +27,6 @@ public class AlgaeIntake extends SubsystemBase {
   private final SparkClosedLoopController leftPID;
   private final SparkClosedLoopController rightPID;
 
-  private final SparkClosedLoopController leftPID;
-  private final SparkClosedLoopController rightPID;
   /** Creates a new AlgaeIntake. */
   public AlgaeIntake() {
     leftMotor = new SparkMax(AlgaeConstants.leftMotorID, MotorType.kBrushless);
@@ -96,9 +94,5 @@ public class AlgaeIntake extends SubsystemBase {
     return ()-> false; //Come back and edit this later
   }
 
-  private void wheelsIn() {
-    leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
-    rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
-  }
 }
-rolType.kVelocity);
+
