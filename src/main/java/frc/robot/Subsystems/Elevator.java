@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
 public class Elevator extends SubsystemBase {
+                                        // initialize in the constructor
     private final SparkMax LeftMotor = new SparkMax(ElevatorConstants.LMotorID, MotorType.kBrushless);
     private final SparkMax RightMotor = new SparkMax(ElevatorConstants.RMotorID, MotorType.kBrushless);
+
+    // make a profiled PID controller and add a gravity FF
     public void SetLevel(Integer Level){
         if (Level == 1) gotoHeight(ElevatorConstants.Level1);
         if (Level == 2) gotoHeight(ElevatorConstants.Level2);
