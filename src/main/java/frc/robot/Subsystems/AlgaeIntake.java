@@ -95,4 +95,3 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
 }
-
