@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
@@ -49,7 +50,8 @@ public class AlgaeIntake extends SubsystemBase {
     rightConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(20)
-    .inverted(true);
+    .inverted(true)
+    .follow(leftMotor);
     rightConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     .pid(AlgaeConstants.kP, AlgaeConstants.kI, AlgaeConstants.kD);
@@ -61,16 +63,21 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   public Command in(){
-    return runOnce(()-> wheelsIn()).until(isAlgae());
-
+    return runOnce(() -> leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity));
   }
 
-  public BooleanSupplier isAlgae(){
-    return ()-> false; //Come back and edit this later
+  public Command out(){
+    return runOnce(() -> leftPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVelocity));
   }
 
-  private void wheelsIn() {
-    leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
-    rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
+  public Command stop(){
+    return runOnce(() -> leftPID.setReference(0, ControlType.kVelocity));
   }
+
+  public void respondToAlgae(){
+    new Trigger( ()-> leftMotor.getOutputCurrent() > AlgaeConstants.struggleCurrent)
+    .onTrue(stop()); //Come back and edit this later
+  }
+
+ 
 }

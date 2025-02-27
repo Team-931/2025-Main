@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.PoseEstimator;
 import frc.robot.Subsystems.Drivetrain.Drivetrain;
 
@@ -20,6 +21,7 @@ public class RobotContainer {
   /* private final Drivetrain drivetrain;
   private final PoseEstimator poseEstimator;
    */
+  private final AlgaeIntake algaeIntake;
 
   public RobotContainer() {
     driver = new CommandXboxController(0);
@@ -39,10 +41,18 @@ public class RobotContainer {
                                                                  driver.getHID()::getBButtonPressed);
      */
     // TODO: add operator subsystems.
+    algaeIntake = new AlgaeIntake();
+
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    operator.a().onTrue(algaeIntake.in())
+    .onFalse(algaeIntake.stop());
+    operator.b().onTrue(algaeIntake.out())
+    .onFalse(algaeIntake.stop());
+    algaeIntake.respondToAlgae();
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

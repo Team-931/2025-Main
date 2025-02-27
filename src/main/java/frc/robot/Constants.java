@@ -68,6 +68,7 @@ public final class Constants
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double struggleCurrent = 5; //amps //TODO: look it up
   }
 
   public static class CoralConstants {
