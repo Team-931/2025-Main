@@ -18,19 +18,22 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AlgaeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
   private final SparkMax leftMotor;
   private final SparkMax rightMotor;
+  private final SparkClosedLoopController leftPID;
+  private final SparkClosedLoopController rightPID;
 
   /** Creates a new AlgaeIntake. */
   public AlgaeIntake() {
     leftMotor = new SparkMax(AlgaeConstants.leftMotorID, MotorType.kBrushless);
     rightMotor = new SparkMax(AlgaeConstants.rightMotorID, MotorType.kBrushless);
 
-    SparkClosedLoopController leftPID = leftMotor.getClosedLoopController();
-    SparkClosedLoopController rightPID = rightMotor.getClosedLoopController();
+     leftPID = leftMotor.getClosedLoopController();
+     rightPID = rightMotor.getClosedLoopController();
     
 
     SparkMaxConfig leftConfig = new SparkMaxConfig();
@@ -60,8 +63,31 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   public Command in(){
-    return runOnce(()-> leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity).and(rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity))).until(isAlgae());
+    return runOnce(()-> {
+      leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
+       rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
+      })
+      .until(isAlgae());// until is useless here
 
+  }
+
+  public Command out() {
+    return runOnce(()-> {
+      leftPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVelocity);
+       rightPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVelocity);
+      }) ;
+  }
+
+  public Command stop() {
+      return runOnce(()-> {
+        leftPID.setReference(0, ControlType.kVelocity); //Can also use stopMotor()
+         rightPID.setReference(0, ControlType.kVelocity);
+        });
+    
+  }
+
+  public void stopOnAlgaeBinding() {
+    new Trigger(isAlgae()).onTrue(stop());
   }
 
   public BooleanSupplier isAlgae(){
