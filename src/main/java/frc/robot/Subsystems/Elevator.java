@@ -17,12 +17,16 @@ public class Elevator extends SubsystemBase {
 
     // make a profiled PID controller and add a gravity FF
     public void SetLevel(Integer Level){
-        if (Level == 1) gotoHeight(ElevatorConstants.Level1);
-        if (Level == 2) gotoHeight(ElevatorConstants.Level2);
-        if (Level == 3) gotoHeight(ElevatorConstants.Level3);
-        if (Level == 4) gotoHeight(ElevatorConstants.Level4);
+        if (Level == 1) goToHeight(ElevatorConstants.Level1);
+        if (Level == 2) goToHeight(ElevatorConstants.Level2);
+        if (Level == 3) goToHeight(ElevatorConstants.Level3);
+        if (Level == 4) goToHeight(ElevatorConstants.Level4);
     }
     // use SparkBaseConfig here
 public Elevator () {} //do setup here, use the gear ratios/
+
+public void goToHeight (double height) {
+
+}
 }
 
