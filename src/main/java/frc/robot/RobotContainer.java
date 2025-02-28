@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.PoseEstimator;
 
 public class RobotContainer {
+  private final Elevator elevator = new Elevator();
   private final CommandXboxController driver, operator;
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   /* private final Drivetrain drivetrain;
@@ -46,6 +48,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     //operator.x().onTrue(algaeIntake.in());
+    operator.a().onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
   }
 
   public Command getAutonomousCommand() {
