@@ -40,6 +40,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.Constants.Positions;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -344,6 +346,51 @@ public class Drivetrain extends SubsystemBase
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
+  }
+
+  public Command navigateToTag(Positions pose) {
+    Pose3d target;
+    switch(pose) {
+      case ALFA_BRAVO:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(18).get() : aprilTagFieldLayout.getTagPose(7).get();
+      break;
+      case CHARLIE_DELTA:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(17).get() : aprilTagFieldLayout.getTagPose(8).get();
+      break;    
+      case ECHO_FOXTROT:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(22).get() : aprilTagFieldLayout.getTagPose(9).get();
+      break;
+      case GOLF_HOTEL:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(21).get() : aprilTagFieldLayout.getTagPose(10).get();
+      break;
+      case INDIA_JULIET:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(20).get() : aprilTagFieldLayout.getTagPose(11).get();
+      break;
+      case KILO_LIMA:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(19).get() : aprilTagFieldLayout.getTagPose(6).get();
+      break;
+      case BARGE:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(14).get() : aprilTagFieldLayout.getTagPose(5).get();
+      break;
+      case LEFT_STATION:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(13).get() : aprilTagFieldLayout.getTagPose(1).get();
+      break;
+      case RIGHT_STATION:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(12).get() : aprilTagFieldLayout.getTagPose(2).get();
+      break;
+      default:
+        target = new Pose3d();
+    }
+    return driveToPose(target.toPose2d());
   }
 
   /**
