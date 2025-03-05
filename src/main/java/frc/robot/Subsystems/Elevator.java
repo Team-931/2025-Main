@@ -15,6 +15,8 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
@@ -25,6 +27,8 @@ public class Elevator extends SubsystemBase {
     private final SparkClosedLoopController leftPID = LeftMotor.getClosedLoopController();
     private final SparkClosedLoopController rightPID = RightMotor.getClosedLoopController();
     // make a profiled PID controller and add a gravity FF
+    private final ProfiledPIDController pid;
+    private final ElevatorFeedforward ff;
     public void SetLevel(Integer Level){
         if (Level == 1) goToHeight(ElevatorConstants.Level1);
         if (Level == 2) goToHeight(ElevatorConstants.Level2);
