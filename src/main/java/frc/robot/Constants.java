@@ -65,8 +65,8 @@ public final class Constants
   }
 
   public static class AlgaeConstants {
-    public static final int leftMotorID = 5;
-    public static final int rightMotorID = 6;
+    public static final int leftMotorID = 13;
+    public static final int rightMotorID = 14;
     public static final double motorVelocity = 2000;
     public static final double kP = 1;
     public static final double kI = 0;
