@@ -80,4 +80,15 @@ public final class Constants
   public static class WristConstants {}
 
  */
+  public static enum Positions {
+    ALFA_BRAVO,
+    CHARLIE_DELTA,
+    ECHO_FOXTROT,
+    GOLF_HOTEL,
+    INDIA_JULIET,
+    KILO_LIMA,
+    BARGE,
+    LEFT_STATION,
+    RIGHT_STATION
+  }
 }
