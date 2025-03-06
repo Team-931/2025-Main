@@ -47,8 +47,9 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    //operator.x().onTrue(algaeIntake.in());
-    operator.a().onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
+    //operator.button(8).onTrue(algaeIntake.in());
+    //operator.axisLessThan(2, -.5).onTrue(algae center);
+    operator.button(11).onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
   }
 
   public Command getAutonomousCommand() {
