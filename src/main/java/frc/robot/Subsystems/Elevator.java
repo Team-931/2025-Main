@@ -11,11 +11,11 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
@@ -43,18 +43,26 @@ public Elevator () {
     leftConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(50)
-    .inverted(true);
+    .inverted(true)
+    .encoder.positionConversionFactor(1/ElevatorConstants.gearing)
+        .velocityConversionFactor(1/ElevatorConstants.gearing/60);
     leftConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
+        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
+            .maxAcceleration(ElevatorConstants.maxAcceleration);
 
     rightConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(50)
-    .inverted(false);
+    .inverted(false)
+    .encoder.positionConversionFactor(1/ElevatorConstants.gearing)
+        .velocityConversionFactor(1/ElevatorConstants.gearing/60);
     rightConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
+        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
+            .maxAcceleration(ElevatorConstants.maxAcceleration);
 
     LeftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     RightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -62,8 +70,10 @@ public Elevator () {
 } //do setup here, use the gear ratios/
 
 public void goToHeight (double height) {
-leftPID.setReference(height,ControlType.kPosition);
-rightPID.setReference(height,ControlType.kPosition);
+leftPID.setReference(height,ControlType.kPosition,
+    ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
+rightPID.setReference(height,ControlType.kPosition,
+    ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
 }
 

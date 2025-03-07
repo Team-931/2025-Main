@@ -61,6 +61,10 @@ public final class Constants
 	  public static final double kP = .1;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double gearing = 20/1;
+    public static final double maxVelocity = 0, // in/sec
+      maxAcceleration = 0, // in/sec^2
+      gravityCompensator = 0; // Volts
 	
   }
 
