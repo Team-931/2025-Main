@@ -6,6 +6,7 @@ package frc.robot.Subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -92,6 +93,10 @@ public class AlgaeIntake extends SubsystemBase {
 
   public BooleanSupplier isAlgae(){
     return ()-> false; //Come back and edit this later
+  }
+
+  public SparkAbsoluteEncoder getWristEncoder() {
+    return leftMotor.getAbsoluteEncoder();
   }
 
 }

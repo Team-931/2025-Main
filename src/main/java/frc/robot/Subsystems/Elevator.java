@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.Subsystems;
-import frc.robot.Constants.AlgaeConstants;
 import frc.robot.Constants.ElevatorConstants;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
