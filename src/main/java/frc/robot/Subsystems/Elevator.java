@@ -27,8 +27,8 @@ public class Elevator extends SubsystemBase {
     private final SparkClosedLoopController leftPID = LeftMotor.getClosedLoopController();
     private final SparkClosedLoopController rightPID = RightMotor.getClosedLoopController();
     // make a profiled PID controller and add a gravity FF
-    private final ProfiledPIDController pid;
-    private final ElevatorFeedforward ff;
+    //private final ProfiledPIDController pid;
+    //private final ElevatorFeedforward ff;
     public void SetLevel(Integer Level){
         if (Level == 1) goToHeight(ElevatorConstants.Level1);
         if (Level == 2) goToHeight(ElevatorConstants.Level2);
