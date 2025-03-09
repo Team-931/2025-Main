@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.CoralIntake;
+import frc.robot.Subsystems.CoralSlide;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.PoseEstimator;
@@ -23,6 +24,7 @@ public class RobotContainer {
   private final CommandXboxController driver, operator;
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
+  private final CoralSlide coralSlide = new CoralSlide();
   private final Drivetrain drivetrain;
   private final PoseEstimator poseEstimator;
 
@@ -47,9 +49,14 @@ public class RobotContainer {
       .onFalse(algaeIntake.stop());
 
     algaeIntake.stopOnAlgaeBinding();
+
     operator.button(2).onTrue(coralIntake.in());
     operator.button(1).onTrue(coralIntake.out());
-    //operator.axisLessThan(2, -.5).onTrue(algae center);
+
+    operator.axisLessThan(0, -.5).onTrue(coralSlide.goLeft());
+    operator.axisGreaterThan(0, .5).onTrue(coralSlide.goCenter());
+    operator.axisGreaterThan(1, .5).onTrue(coralSlide.goRight());
+    
     operator.button(12).onTrue(elevator.runOnce(()->elevator.SetLevel(1)));
     operator.button(11).onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
     operator.button(10).onTrue(elevator.runOnce(()->elevator.SetLevel(3)));
