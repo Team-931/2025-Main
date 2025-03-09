@@ -90,6 +90,18 @@ public final class Constants
   
   }
 
+  public static class SlideConstants {
+
+    public static final int motorID = 12;
+    public static final double kP = .1;
+    public static final double gearRatio = 25/1;
+    public static final double screwRatio = 1/1; // in / rotation
+	  public static final double centerPos = 0;
+    public static final double leftPos = -14.5/2; //inches
+    public static final double rightPos = 14.5/2;
+  
+  }
+
   public static class WristConstants {
     public static final int wristMotorID = 11;
     public static final double motorVelocity = 2000;
