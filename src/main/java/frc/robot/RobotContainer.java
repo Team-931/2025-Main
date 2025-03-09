@@ -29,7 +29,7 @@ public class RobotContainer {
   private final PoseEstimator poseEstimator;
 
   public RobotContainer() {
-    driver = new CommandXboxController(0);
+    driver = new CommandXboxController(1);
     operator = new CommandXboxController(0);
     drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(),"swerve"), driver);
     poseEstimator = new PoseEstimator(drivetrain);
@@ -56,7 +56,7 @@ public class RobotContainer {
     operator.axisLessThan(0, -.5).onTrue(coralSlide.goLeft());
     operator.axisGreaterThan(0, .5).onTrue(coralSlide.goCenter());
     operator.axisGreaterThan(1, .5).onTrue(coralSlide.goRight());
-    
+
     operator.button(12).onTrue(elevator.runOnce(()->elevator.SetLevel(1)));
     operator.button(11).onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
     operator.button(10).onTrue(elevator.runOnce(()->elevator.SetLevel(3)));
