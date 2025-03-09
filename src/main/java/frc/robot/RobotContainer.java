@@ -4,20 +4,18 @@
 
 package frc.robot;
 
-import java.io.File;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.CoralIntake;
 import frc.robot.Subsystems.CoralSlide;
-import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.DriveSubsystem;
 import frc.robot.Subsystems.Elevator;
-import frc.robot.Subsystems.PoseEstimator;
 import frc.robot.Subsystems.Wrist;
 
 public class RobotContainer {
@@ -27,19 +25,22 @@ public class RobotContainer {
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
   private final CoralSlide coralSlide = new CoralSlide();
-  private final Drivetrain drivetrain;
-  private final PoseEstimator poseEstimator;
-
+  private final DriveSubsystem drivetrain = new DriveSubsystem();
+  
   public RobotContainer() {
     driver = new CommandXboxController(1);
     operator = new CommandXboxController(0);
-    drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(),"swerve"), driver);
-    poseEstimator = new PoseEstimator(drivetrain);
      
     // TODO: add operator subsystems.
     configureBindings();
 
-    drivetrain.setDefaultCommand(drivetrain.driveCommand(()-> driver.getLeftX(), ()-> driver.getLeftY(), ()-> driver.getRightX()));
+    drivetrain.setDefaultCommand(new RunCommand(
+            () -> drivetrain.drive(
+                circularScale(-MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.kDriveDeadband)),  
+                circularScale(-MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.kDriveDeadband)),
+                circularScale(-MathUtil.applyDeadband(driver.getRightX(), OperatorConstants.kDriveDeadband)),
+                true, false), drivetrain)
+        );
   }
 
   private void configureBindings() {
@@ -80,4 +81,29 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
+
+  
+  double inputScale(double input, int scale) {
+    boolean isNegative = input < 0;
+    double out;
+    if (isNegative) {
+      out = -(1 - ((1 - DriveConstants.kMinSpeedMultiplier) * driver.getLeftTriggerAxis())) * (Math.pow(input, scale));
+    }
+    else {
+      out = (1 - ((1 - DriveConstants.kMinSpeedMultiplier) * driver.getLeftTriggerAxis())) * (Math.pow(input, scale));
+    }
+    return(out);
+  }
+  double circularScale(double in) {
+  boolean isNegative = in < 0;
+  double out;
+  if (isNegative) {
+    out = (1 - ((1 - DriveConstants.kMinSpeedMultiplier) * driver.getLeftTriggerAxis())) * (Math.sqrt(1 - Math.pow(in, 2)) - 1);
+  }
+  else {
+    out = (1 - ((1 - DriveConstants.kMinSpeedMultiplier) * driver.getLeftTriggerAxis())) * (-Math.sqrt(1 - Math.pow(in, 2)) + 1);
+  }
+  return(out);
+}
+
 }
