@@ -18,9 +18,11 @@ import frc.robot.Subsystems.CoralSlide;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.PoseEstimator;
+import frc.robot.Subsystems.Wrist;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
+  private final Wrist wrist = new Wrist();
   private final CommandXboxController driver, operator;
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
@@ -41,6 +43,17 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+
+    operator.button(3).onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral")));
+    operator.button(4).onTrue(wrist.runOnce(() -> wrist.setWristPosition("bargePos")));
+    operator.button(5).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L4Pos")));
+    if (elevator.getHeight() == 1) {
+      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("algaeintake")));
+    }
+    else if (elevator.getHeight() == 2 || elevator.getHeight() == 3) {
+      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L23Pos")));
+    }
+
     operator.button(8)
       .onTrue(algaeIntake.in())
       .onFalse(algaeIntake.stop());

@@ -1,8 +1,11 @@
 package frc.robot.Subsystems;
 
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
@@ -12,13 +15,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
-public class Pivot extends SubsystemBase {
+public class Wrist extends SubsystemBase {
     // add profiled PID and ArmFeedForward. https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/feedforward.html#feedforward-control-in-wpilib
     private final SparkMax wristMotor;
 
     private final SparkClosedLoopController wristPID;
 
-    public Pivot() {
+    public Wrist() {
     wristMotor = new SparkMax(WristConstants.wristMotorID, MotorType.kBrushless);
     wristPID = wristMotor.getClosedLoopController();
 
@@ -35,8 +38,16 @@ public class Pivot extends SubsystemBase {
     wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    //add code for the 4 positions
-    //The floor position well need to be different from the L1, 2, and 3 positions
-    
+    public void goToWristPosition (double pos) {
+        wristPID.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot1, WristConstants.gravityCompensation, ArbFFUnits.kVoltage);
+    }
+
+    public void setWristPosition(String pos) {
+        if (pos.equals("collectCoral")) goToWristPosition(WristConstants.coralCollectionPosition);
+        if (pos.equals("bargePos")) goToWristPosition(WristConstants.bargePosition);
+        if (pos.equals("L4Pos")) goToWristPosition(WristConstants.L4Position);
+        if (pos.equals("L23Pos")) goToWristPosition(WristConstants.L23Position);
+        if (pos.equals("algaeintake")) goToWristPosition(WristConstants.algaeIntake);
+    }
 
 }

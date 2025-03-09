@@ -108,7 +108,15 @@ public final class Constants
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double gearRatio = 25/1;
+    public static final double gravityCompensation = 0; //This will need to be changed based on how testing goes. 
+    public static final double gearRatio = 25/1; //This needs to be updated, this isn't correct for the motor that we have on the bot. 
+    //All of these positions are temporarry, they were measured on the absolute encoder but will need tuning later. 
+    //All measurements were taken in volts and multiplied by 360 to get the angle in degrees.
+    public static final double coralCollectionPosition = 0;  
+    public static final double bargePosition = 0.165 * 360; //Turns volts to angles
+    public static final double L4Position = 0.5 * 360; //Turns volts to angles
+    public static final double L23Position = 0.396 * 360; //Turns volts to angles
+    public static final double algaeIntake = 0.34 * 360;  //Turns volts to angles
   }
 
  

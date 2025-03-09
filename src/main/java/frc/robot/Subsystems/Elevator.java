@@ -25,14 +25,27 @@ public class Elevator extends SubsystemBase {
     private final SparkMax RightMotor = new SparkMax(ElevatorConstants.RMotorID, MotorType.kBrushless);
     private final SparkClosedLoopController leftPID = LeftMotor.getClosedLoopController();
     private final SparkClosedLoopController rightPID = RightMotor.getClosedLoopController();
+    private int elevatorLevel = 0;
     // make a profiled PID controller and add a gravity FF
     //private final ProfiledPIDController pid;
     //private final ElevatorFeedforward ff;
     public void SetLevel(Integer Level){
-        if (Level == 1) goToHeight(ElevatorConstants.Level1);
-        if (Level == 2) goToHeight(ElevatorConstants.Level2);
-        if (Level == 3) goToHeight(ElevatorConstants.Level3);
-        if (Level == 4) goToHeight(ElevatorConstants.Level4);
+        if (Level == 1) {
+            goToHeight(ElevatorConstants.Level1); 
+            elevatorLevel = 1;
+        }
+        if (Level == 2) {
+            goToHeight(ElevatorConstants.Level2);
+            elevatorLevel =2;
+        }
+        if (Level == 3) {
+            goToHeight(ElevatorConstants.Level3);
+            elevatorLevel = 3;
+        }
+        if (Level == 4) {
+            goToHeight(ElevatorConstants.Level4);
+            elevatorLevel = 4;
+        }
     }
     // use SparkBaseConfig here
 public Elevator () {
@@ -75,5 +88,10 @@ leftPID.setReference(height,ControlType.kPosition,
 rightPID.setReference(height,ControlType.kPosition,
     ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
+
+public int getHeight () {
+    return elevatorLevel;
+}
+
 }
 
