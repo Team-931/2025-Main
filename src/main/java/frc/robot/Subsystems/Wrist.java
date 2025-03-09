@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -18,7 +19,7 @@ import frc.robot.Constants.WristConstants;
 public class Wrist extends SubsystemBase {
     // add profiled PID and ArmFeedForward. https://docs.wpilib.org/en/stable/docs/software/advanced-controls/controllers/feedforward.html#feedforward-control-in-wpilib
     private final SparkMax wristMotor;
-
+    // private final AbsoluteEncoder wristEncoder;
     private final SparkClosedLoopController wristPID;
 
     public Wrist() {
@@ -26,13 +27,15 @@ public class Wrist extends SubsystemBase {
     wristPID = wristMotor.getClosedLoopController();
 
     SparkMaxConfig wristConfig = new SparkMaxConfig();
+
     
     wristConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(20)
-    .inverted(false);
+    .inverted(false)
+    .absoluteEncoder.positionConversionFactor(0);
     wristConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
     .pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
 
     wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
