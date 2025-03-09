@@ -349,48 +349,25 @@ public class Drivetrain extends SubsystemBase
   }
 
   public Command navigateToTag(Positions pose) {
-    Pose3d target;
-    switch(pose) {
-      case ALFA_BRAVO:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(18).get() : aprilTagFieldLayout.getTagPose(7).get();
-      break;
-      case CHARLIE_DELTA:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(17).get() : aprilTagFieldLayout.getTagPose(8).get();
-      break;    
-      case ECHO_FOXTROT:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(22).get() : aprilTagFieldLayout.getTagPose(9).get();
-      break;
-      case GOLF_HOTEL:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(21).get() : aprilTagFieldLayout.getTagPose(10).get();
-      break;
-      case INDIA_JULIET:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(20).get() : aprilTagFieldLayout.getTagPose(11).get();
-      break;
-      case KILO_LIMA:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(19).get() : aprilTagFieldLayout.getTagPose(6).get();
-      break;
-      case BARGE:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(14).get() : aprilTagFieldLayout.getTagPose(5).get();
-      break;
-      case LEFT_STATION:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(13).get() : aprilTagFieldLayout.getTagPose(1).get();
-      break;
-      case RIGHT_STATION:
-        target = DriverStation.getAlliance().get() == 
-        Alliance.Blue ? aprilTagFieldLayout.getTagPose(12).get() : aprilTagFieldLayout.getTagPose(2).get();
-      break;
-      default:
-        target = new Pose3d();
+    return driveToPose(getTagPose(pose).toPose2d());
+  }
+
+  public Command navigateToReef() {
+    double minDist = 100;
+    Positions target = Positions.ALFA_BRAVO; // Default initialization
+    Positions branches[] = {Positions.ALFA_BRAVO, Positions.CHARLIE_DELTA, Positions.ECHO_FOXTROT, Positions.GOLF_HOTEL, Positions.INDIA_JULIET, Positions.KILO_LIMA};
+    for (int i = 0; i < branches.length; i++) {
+      if(distanceTo(getTagPose(branches[i]).toPose2d()) < minDist) {
+        minDist = distanceTo(getTagPose(branches[i]).toPose2d());
+        target = branches[i];
+      }
     }
-    return driveToPose(target.toPose2d());
+    return navigateToTag(target);
+  }
+
+  // credit: marcus
+  public double distanceTo(Pose2d other) {
+    return Math.sqrt(Math.pow(other.getX() - swerveDrive.getPose().getX(), 2) + Math.pow(other.getY() - swerveDrive.getPose().getY(), 2));
   }
 
   /**
@@ -863,4 +840,48 @@ public class Drivetrain extends SubsystemBase
     return swerveDrive.getRobotVelocity();
   }
 
+  private Pose3d getTagPose(Positions tag) {
+    Pose3d target;
+    switch(tag) {
+      case ALFA_BRAVO:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(18).get() : aprilTagFieldLayout.getTagPose(7).get();
+      break;
+      case CHARLIE_DELTA:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(17).get() : aprilTagFieldLayout.getTagPose(8).get();
+      break;    
+      case ECHO_FOXTROT:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(22).get() : aprilTagFieldLayout.getTagPose(9).get();
+      break;
+      case GOLF_HOTEL:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(21).get() : aprilTagFieldLayout.getTagPose(10).get();
+      break;
+      case INDIA_JULIET:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(20).get() : aprilTagFieldLayout.getTagPose(11).get();
+      break;
+      case KILO_LIMA:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(19).get() : aprilTagFieldLayout.getTagPose(6).get();
+      break;
+      case BARGE:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(14).get() : aprilTagFieldLayout.getTagPose(5).get();
+      break;
+      case LEFT_STATION:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(13).get() : aprilTagFieldLayout.getTagPose(1).get();
+      break;
+      case RIGHT_STATION:
+        target = DriverStation.getAlliance().get() == 
+        Alliance.Blue ? aprilTagFieldLayout.getTagPose(12).get() : aprilTagFieldLayout.getTagPose(2).get();
+      break;
+      default:
+        target = new Pose3d();
+    }
+        return target;
+  }
 }
