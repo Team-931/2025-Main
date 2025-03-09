@@ -69,7 +69,7 @@ public class AlgaeIntake extends SubsystemBase {
        rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
       })
       .until(isAlgae());// until is useless here
-
+      
   }
 
   public Command out() {

@@ -75,15 +75,29 @@ public final class Constants
     public static final double kP = 1;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double gearRatio = 25/1;
   }
-/* 
+ 
   public static class CoralConstants {
+    public static final int coralMotorID = 15;
+    public static final double motorVelocity = 2000;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double gearRatio = 25/1;
   
   }
 
-  public static class WristConstants {}
+  public static class WristConstants {
+    public static final int wristMotorID = 11;
+    public static final double motorVelocity = 2000;
+    public static final double kP = 1;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double gearRatio = 25/1;
+  }
 
- */
+ 
   public static enum Positions {
     ALFA_BRAVO,
     CHARLIE_DELTA,
