@@ -37,8 +37,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    operator.button(8).onTrue(algaeIntake.in());
-    operator.button(7).onTrue(algaeIntake.out());
+    operator.button(8)
+      .onTrue(algaeIntake.in())
+      .onFalse(algaeIntake.stop());
+    operator.button(7)
+      .onTrue(algaeIntake.out())
+      .onFalse(algaeIntake.stop());
+
+    algaeIntake.stopOnAlgaeBinding();
 
     //operator.axisLessThan(2, -.5).onTrue(algae center);
     operator.button(12).onTrue(elevator.runOnce(()->elevator.SetLevel(1)));

@@ -17,6 +17,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -65,38 +67,50 @@ public class AlgaeIntake extends SubsystemBase {
 
   public Command in(){
     return runOnce(()-> {
-      leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
-       rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVelocity);
-      })
-      .until(isAlgae());// until is useless here
+      leftPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVoltage);
+       rightPID.setReference(AlgaeConstants.motorVelocity, ControlType.kVoltage);
+      });
 
   }
 
   public Command out() {
     return runOnce(()-> {
-      leftPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVelocity);
-       rightPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVelocity);
+      leftPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVoltage);
+       rightPID.setReference(-AlgaeConstants.motorVelocity, ControlType.kVoltage);
       }) ;
   }
 
   public Command stop() {
       return runOnce(()-> {
-        leftPID.setReference(0, ControlType.kVelocity); //Can also use stopMotor()
-         rightPID.setReference(0, ControlType.kVelocity);
+        leftPID.setReference(0, ControlType.kVoltage); //Can also use stopMotor()
+         rightPID.setReference(0, ControlType.kVoltage);
         });
     
   }
 
+  public Trigger caughtOneTrigger = new Trigger(isAlgae());
   public void stopOnAlgaeBinding() {
-    new Trigger(isAlgae()).onTrue(stop());
+    caughtOneTrigger.onTrue(stop());
   }
 
+  private Timer currentTimer = new Timer();
+
   public BooleanSupplier isAlgae(){
-    return ()-> false; //Come back and edit this later
+    return ()-> {
+      if (leftMotor.getOutputCurrent() >= AlgaeConstants.highCurrent){
+        currentTimer.start(); // no effect if is running
+        return (currentTimer.hasElapsed(AlgaeConstants.highCurrentTime));
+      }
+      else{
+        currentTimer.reset();
+        currentTimer.stop();
+        return false;
+      }
+
+    }; //Come back and edit this later
   }
 
   public SparkAbsoluteEncoder getWristEncoder() {
     return leftMotor.getAbsoluteEncoder();
   }
-
 }

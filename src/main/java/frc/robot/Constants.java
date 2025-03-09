@@ -71,10 +71,12 @@ public final class Constants
   public static class AlgaeConstants {
     public static final int leftMotorID = 13;
     public static final int rightMotorID = 14;
-    public static final double motorVelocity = 2000;
-    public static final double kP = 1;
+    public static final double motorVelocity = /* 2000 */12 /*V */;
+    public static final double kP = .0001;
     public static final double kI = 0;
     public static final double kD = 0;
+    public static final double highCurrent = 5 /*A */;
+    public static final double highCurrentTime = .5;/*sec*/
   }
 /* 
   public static class CoralConstants {
