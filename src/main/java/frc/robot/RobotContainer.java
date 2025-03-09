@@ -29,7 +29,7 @@ public class RobotContainer {
   public RobotContainer() {
     driver = new CommandXboxController(0);
     operator = new CommandXboxController(0);
-    drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(),"swerve"));
+    drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(),"swerve"), driver);
     poseEstimator = new PoseEstimator(drivetrain);
      
     // TODO: add operator subsystems.

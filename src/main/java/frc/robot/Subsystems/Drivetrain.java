@@ -5,6 +5,7 @@
 package frc.robot.Subsystems;
 
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -31,12 +32,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -78,13 +81,13 @@ public class Drivetrain extends SubsystemBase
   //  * PhotonVision class to keep an accurate odometry.
   //  */
   //       PoseEstimator             vision;
-
+  private final CommandXboxController driverController;
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
    *
    * @param directory Directory of swerve drive config files.
    */
-  public Drivetrain(File directory)
+  public Drivetrain(File directory, CommandXboxController controller)
   {
     // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
     //  In this case the gear ratio is 12.8 motor revolutions per wheel rotation.
@@ -129,6 +132,8 @@ public class Drivetrain extends SubsystemBase
     //   swerveDrive.stopOdometryThread();
     // }
     setupPathPlanner();
+
+    driverController = controller;
   }
 
   /**
@@ -137,13 +142,14 @@ public class Drivetrain extends SubsystemBase
    * @param driveCfg      SwerveDriveConfiguration for the swerve.
    * @param controllerCfg Swerve Controller.
    */
-  public Drivetrain(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg)
+  public Drivetrain(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg, CommandXboxController controller)
   {
     swerveDrive = new SwerveDrive(driveCfg,
                                   controllerCfg,
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
+                                             driverController = controller;
   }
 
   /**
@@ -426,6 +432,12 @@ public class Drivetrain extends SubsystemBase
 
   }
 
+  public boolean isBeingControlledByHuman() {
+    double leftStickPower = Math.abs(new Translation2d(driverController.getLeftX(), driverController.getLeftY()).getNorm());
+    double rightStickPower = Math.abs(new Translation2d(driverController.getRightX(), driverController.getRightY()).getNorm());
+
+    return leftStickPower > 0.05 || rightStickPower > 0.05;
+  }
 
   /**
    * Command to characterize the robot drive motors using SysId
@@ -883,5 +895,10 @@ public class Drivetrain extends SubsystemBase
         target = new Pose3d();
     }
         return target;
+  }
+
+  public LinearVelocity getVelocityMagnitude() {
+    ChassisSpeeds cs = getFieldVelocity();
+    return MetersPerSecond.of(new Translation2d(cs.vxMetersPerSecond, cs.vyMetersPerSecond).getNorm());
   }
 }
