@@ -25,7 +25,7 @@ public class CoralSlide extends SubsystemBase {
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(20)
         .inverted(false)
-        .encoder.positionConversionFactor(1/ElevatorConstants.gearing);
+        .encoder.positionConversionFactor(1/SlideConstants.gearRatio/SlideConstants.screwRatio);
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .p(SlideConstants.kP);
