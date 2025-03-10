@@ -208,7 +208,11 @@ public final class Constants
 	  public static final double centerPos = 0;
     public static final double leftPos = -12/2; //inches
     public static final double rightPos = 12/2;
-  
+    
+    public static final int leftDIO = 0;
+    public static final int rightDIO = 1;
+    public static final int centreDIO = 2;
+    public static final double speed = 1000;
   }
 
   public static class WristConstants {
