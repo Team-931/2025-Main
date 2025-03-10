@@ -205,8 +205,8 @@ public final class Constants
     public static final double gearRatio = 25/1;
     public static final double screwRatio = 1/1; // in / rotation
 	  public static final double centerPos = 0;
-    public static final double leftPos = -12/2; //inches
-    public static final double rightPos = 12/2;
+    public static final double leftPos = -12.5/2; //inches
+    public static final double rightPos = 12.5/2;
   
   }
 

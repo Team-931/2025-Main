@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
@@ -43,6 +44,10 @@ public class RobotContainer {
         );
   }
 
+  private Trigger slideLeftTrigger = coralIntake.slideLeftLimit(),
+  slideRightTrigger = coralIntake.slideRightLimit(),
+  slideCenterTrigger = coralIntake.slideCentered();
+
   private void configureBindings() {
 
     operator.button(3).onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral")));
@@ -75,12 +80,14 @@ public class RobotContainer {
     operator.axisLessThan(0, -.5).onTrue(coralSlide.goLeft());
     operator.axisGreaterThan(0, .5).onTrue(coralSlide.goCenter());
     operator.axisGreaterThan(1, .5).onTrue(coralSlide.goRight());
-
+  // response to elevator control buttons
     operator.button(12).onTrue(elevator.runOnce(()->elevator.SetLevel(1)));
     operator.button(11).onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
     operator.button(10).onTrue(elevator.runOnce(()->elevator.SetLevel(3)));
     operator.button(9).onTrue(elevator.runOnce(()->elevator.SetLevel(4)));
-    
+  // response to the slide hitting a limit switch
+    slideLeftTrigger.onTrue(coralSlide.resetLeft());
+    slideRightTrigger.onTrue(coralSlide.resetRight());
   }
 
   public Command getAutonomousCommand() {

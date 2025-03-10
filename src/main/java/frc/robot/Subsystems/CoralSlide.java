@@ -25,6 +25,14 @@ public class CoralSlide extends SubsystemBase {
         .smartCurrentLimit(20)
         .inverted(true)
         .encoder.positionConversionFactor(1/SlideConstants.gearRatio/SlideConstants.screwRatio);
+        config.limitSwitch
+            .forwardLimitSwitchEnabled(false)
+            .reverseLimitSwitchEnabled(false);
+        config.softLimit
+            .forwardSoftLimitEnabled(true)
+            .forwardSoftLimit(SlideConstants.rightPos)
+            .reverseSoftLimitEnabled(true)
+            .reverseSoftLimit(SlideConstants.leftPos);
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .p(SlideConstants.kP);
@@ -47,4 +55,16 @@ public class CoralSlide extends SubsystemBase {
         return runOnce(() -> goToPosition(SlideConstants.rightPos));
     }
     
+    public Command resetRight() {
+        return runOnce(() -> motor.getEncoder().setPosition(SlideConstants.rightPos));
+    }
+    
+    public Command resetLeft() {
+        return runOnce(() -> motor.getEncoder().setPosition(SlideConstants.leftPos));
+    }
+    
+/*     public Command resetCenter() {
+        return runOnce(() -> goToPosition(SlideConstants.centerPos));
+    }
+ */    
 }
