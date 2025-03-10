@@ -1,5 +1,7 @@
 package frc.robot.Subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -10,8 +12,10 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CoralConstants;
 
 public class CoralIntake extends SubsystemBase {
@@ -30,7 +34,7 @@ public class CoralIntake extends SubsystemBase {
     coralConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(20)
-    .inverted(false);
+    .inverted(true);
     coralConfig.closedLoop
     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     .pid(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
@@ -41,19 +45,41 @@ public class CoralIntake extends SubsystemBase {
 
   public Command in() {
     return runOnce(()-> {
-      coralPID.setReference(CoralConstants.motorVelocity, ControlType.kVelocity);
+      coralPID.setReference(CoralConstants.motorVelocity, ControlType.kVoltage);
       }) ;
   }
 
   public Command out() {
     return runOnce(()-> {
-      coralPID.setReference(-CoralConstants.motorVelocity, ControlType.kVelocity);
+      coralPID.setReference(-CoralConstants.motorVelocity, ControlType.kVoltage);
       }) ;
   }
 
   public Command stop() {
     return runOnce(()-> {
-      coralPID.setReference(0, ControlType.kVelocity);
+      coralPID.setReference(0, ControlType.kVoltage);
       }) ;
+  }
+
+  public Trigger caughtOneTrigger = new Trigger(isCoral());
+
+  public void stopOnCoralBinding() {
+    caughtOneTrigger.onTrue(stop());
+  }
+
+  private Timer currentTimer = new Timer();
+
+  public BooleanSupplier isCoral(){
+    return ()-> {
+      if (coralMotor.getOutputCurrent() >= CoralConstants.highCurrent){
+        currentTimer.start(); // no effect if is running
+        return (currentTimer.hasElapsed(CoralConstants.highCurrentTime));
+      }
+      else{
+        currentTimer.reset();
+        currentTimer.stop();
+        return false;
+      }
+    };
   }
 }

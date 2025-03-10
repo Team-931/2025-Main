@@ -63,9 +63,14 @@ public class RobotContainer {
       .onFalse(algaeIntake.stop());
 
     algaeIntake.stopOnAlgaeBinding();
+    coralIntake.stopOnCoralBinding();
 
-    operator.button(2).onTrue(coralIntake.in());
-    operator.button(1).onTrue(coralIntake.out());
+    operator.button(2)
+      .onTrue(coralIntake.in())
+      .onFalse(coralIntake.stop());
+    operator.button(1)
+     .onTrue(coralIntake.out())
+     .onFalse(coralIntake.stop());
 
     operator.axisLessThan(0, -.5).onTrue(coralSlide.goLeft());
     operator.axisGreaterThan(0, .5).onTrue(coralSlide.goCenter());
