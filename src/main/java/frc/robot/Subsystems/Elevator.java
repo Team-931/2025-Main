@@ -83,9 +83,9 @@ public Elevator () {
 } //do setup here, use the gear ratios/
 
 public void goToHeight (double height) {
-leftPID.setReference(height,ControlType.kPosition,
+leftPID.setReference(height,ControlType.kMAXMotionPositionControl,
     ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
-rightPID.setReference(height,ControlType.kPosition,
+rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
     ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
 
