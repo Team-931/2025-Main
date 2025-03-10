@@ -184,17 +184,18 @@ public final class Constants
     public static final double kD = 0;
     public static final double gearRatio = 25/1;
     public static final double highCurrent = 5 /*A */;
-    public static final double highCurrentTime = .5;/*sec*/
+    public static final double highCurrentTime = .25;/*sec*/
   }
 
   public static class CoralConstants {
     public static final int coralMotorID = 15;
-    public static final double motorVelocity = 2000;
-    public static final double kP = 1;
+    public static final double motorVelocity = /* 2000 */12 /*V */;
+    public static final double kP = .0001;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double gearRatio = 25/1;
-  
+    public static final double highCurrent = 3 /*A */;
+    public static final double highCurrentTime = .25;/*sec*/  
   }
 
   public static class SlideConstants {
@@ -204,8 +205,8 @@ public final class Constants
     public static final double gearRatio = 25/1;
     public static final double screwRatio = 1/1; // in / rotation
 	  public static final double centerPos = 0;
-    public static final double leftPos = -14.5/2; //inches
-    public static final double rightPos = 14.5/2;
+    public static final double leftPos = -12/2; //inches
+    public static final double rightPos = 12/2;
   
   }
 
