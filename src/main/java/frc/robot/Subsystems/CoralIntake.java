@@ -86,11 +86,11 @@ public class CoralIntake extends SubsystemBase {
     };
   }
 
-  public Trigger slideLeftLimit() {
+  public Trigger slideRightLimit() {
     return new Trigger(() -> coralMotor.getForwardLimitSwitch().isPressed());
   }
 
-  public Trigger slideRightLimit() {
+  public Trigger slideLeftLimit() {
     return new Trigger(() -> coralMotor.getReverseLimitSwitch().isPressed());
   }
 

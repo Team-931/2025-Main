@@ -169,7 +169,8 @@ public final class Constants
 	  public static final double kP = .1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double gearing = 20/1;
+    public static final double gearing = 20/1,
+      inchPerRotation = 25/4;
     public static final double maxVelocity = 0, // in/sec
       maxAcceleration = 0, // in/sec^2
       gravityCompensator = 0; // Volts
@@ -202,12 +203,13 @@ public final class Constants
   public static class SlideConstants {
 
     public static final int motorID = 12;
-    public static final double kP = .1;
+    public static final double kP = .4;
     public static final double gearRatio = 25/1;
     public static final double screwRatio = 1/1; // in / rotation
 	  public static final double centerPos = 0;
-    public static final double leftPos = -12.5/2; //inches
-    public static final double rightPos = 12.5/2;
+    public static final double width = 13.75;
+    public static final double leftPos = -width/2; //inches
+    public static final double rightPos = width/2;
   
   }
 

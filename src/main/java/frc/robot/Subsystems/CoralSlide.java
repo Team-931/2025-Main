@@ -56,11 +56,16 @@ public class CoralSlide extends SubsystemBase {
     }
     
     public Command resetRight() {
-        return runOnce(() -> motor.getEncoder().setPosition(SlideConstants.rightPos));
+        return runOnce(() -> {
+            motor.getEncoder().setPosition(SlideConstants.rightPos);
+            goToPosition(SlideConstants.rightPos);
+        });
     }
     
     public Command resetLeft() {
-        return runOnce(() -> motor.getEncoder().setPosition(SlideConstants.leftPos));
+        return runOnce(() -> {motor.getEncoder().setPosition(SlideConstants.leftPos);
+            goToPosition(SlideConstants.leftPos);
+        });
     }
     
 /*     public Command resetCenter() {
