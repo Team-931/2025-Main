@@ -68,6 +68,9 @@ public class CoralSlide extends SubsystemBase {
         });
     }
     
+    public double WristPosition() {
+        return motor.getAbsoluteEncoder().getPosition();
+    }
 /*     public Command resetCenter() {
         return runOnce(() -> goToPosition(SlideConstants.centerPos));
     }

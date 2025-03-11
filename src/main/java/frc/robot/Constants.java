@@ -155,6 +155,9 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
     public static final double kDriveDeadband = 0.05;
+
+    // wrist to slide interlock:
+    public static final double safeToSlide = .5;//TODO
   }
 
   //Put new Constant classes here.
