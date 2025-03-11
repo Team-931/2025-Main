@@ -2,12 +2,14 @@ package frc.robot.Subsystems;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -37,11 +39,13 @@ public class CoralSlide extends SubsystemBase {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .p(SlideConstants.kP);
-        
+        /* 
         config.absoluteEncoder
             .zeroCentered(false)
             .inverted(false);
-            
+         */
+        config.limitSwitch.reverseLimitSwitchType(Type.kNormallyOpen);
+          
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -74,8 +78,8 @@ public class CoralSlide extends SubsystemBase {
         });
     }
     
-    public SparkAbsoluteEncoder wristEncoder() {
-        return motor.getAbsoluteEncoder();
+    public SparkLimitSwitch wristLimit() {
+        return motor.getReverseLimitSwitch();
     }
 /*     public Command resetCenter() {
         return runOnce(() -> goToPosition(SlideConstants.centerPos));

@@ -7,6 +7,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkLimitSwitch;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,14 +24,17 @@ public class Wrist extends SubsystemBase {
     private final TalonFX drivingTalon;
     private PositionVoltage driveControlRequest = new PositionVoltage(0);
 
+    private SparkLimitSwitch limitSwitch;
+
     private final StatusSignal<AngularVelocity> m_drivingVelocity;
     private final StatusSignal<Angle> m_drivingPosition;
     
   
    
-    public Wrist() {
+    public Wrist(SparkLimitSwitch sparkLimitSwitch) {
         drivingTalon = new TalonFX(WristConstants.wristMotorID);
 
+        limitSwitch = sparkLimitSwitch;
 
     // Factory reset, so we get the SPARKS MAX to a known state before configuring
     // them. This is useful in case a SPARK MAX is swapped out.
@@ -64,6 +69,11 @@ public class Wrist extends SubsystemBase {
     wristConfig.CurrentLimits.SupplyCurrentLimit = 70;
     wristConfig.Feedback.SensorToMechanismRatio = WristConstants.gearRatio;//fix this value
     
+    wristConfig.SoftwareLimitSwitch
+    .withForwardSoftLimitEnable(true)
+    .withReverseSoftLimitEnable(true)
+    .withForwardSoftLimitThreshold(WristConstants.L4Position)
+    .withReverseSoftLimitThreshold(WristConstants.coralCollectionPosition);
 
     wristConfig.Slot0
         .withGravityType(GravityTypeValue.Arm_Cosine)
@@ -77,7 +87,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public void goToWristPosition (double pos) {
-        drivingTalon.setControl(driveControlRequest.withPosition(pos).withLimitReverseMotion(false));
+        drivingTalon.setControl(driveControlRequest.withPosition(pos).withLimitReverseMotion(limitSwitch.isPressed()));
         //wristPID.setReference(pos, ControlType.kPosition, ClosedLoopSlot.kSlot1, WristConstants.gravityCompensation, ArbFFUnits.kVoltage);
     }
 
@@ -87,6 +97,10 @@ public class Wrist extends SubsystemBase {
         if (pos.equals("L4Pos")) goToWristPosition(WristConstants.L4Position);
         if (pos.equals("L23Pos")) goToWristPosition(WristConstants.L23Position);
         if (pos.equals("algaeintake")) goToWristPosition(WristConstants.algaeIntake);
+    }
+
+    public double getPosition() {
+        return m_drivingPosition.getValueAsDouble();
     }
 
 }

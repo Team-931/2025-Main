@@ -26,7 +26,7 @@ public class RobotContainer {
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
   private final CoralSlide coralSlide = new CoralSlide();
-  private final Wrist wrist = new Wrist(coralSlide.wristEncoder());
+  private final Wrist wrist = new Wrist(coralSlide.wristLimit());
   private final DriveSubsystem drivetrain = new DriveSubsystem();
   
   public RobotContainer() {
