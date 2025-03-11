@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -36,6 +37,11 @@ public class CoralSlide extends SubsystemBase {
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .p(SlideConstants.kP);
+        
+        config.absoluteEncoder
+            .zeroCentered(false)
+            .inverted(false);
+            
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -68,8 +74,8 @@ public class CoralSlide extends SubsystemBase {
         });
     }
     
-    public double WristPosition() {
-        return motor.getAbsoluteEncoder().getPosition();
+    public SparkAbsoluteEncoder wristEncoder() {
+        return motor.getAbsoluteEncoder();
     }
 /*     public Command resetCenter() {
         return runOnce(() -> goToPosition(SlideConstants.centerPos));

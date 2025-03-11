@@ -157,7 +157,7 @@ public final class Constants
     public static final double kDriveDeadband = 0.05;
 
     // wrist to slide interlock:
-    public static final double safeToSlide = .5;//TODO
+    public static final double safeToSlide = .5;//TODO: value for safeToSlide
   }
 
   //Put new Constant classes here.
@@ -232,6 +232,8 @@ public final class Constants
     public static final double L4Position = 0.5 * 360; //Turns volts to angles
     public static final double L23Position = 0.396 * 360; //Turns volts to angles
     public static final double algaeIntake = 0.34 * 360;  //Turns volts to angles
+	  public static final double posTolerance = 0,
+                      velTolerance = 0; //TODO: set tolerance
   }
 
  

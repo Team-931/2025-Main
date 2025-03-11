@@ -22,11 +22,11 @@ import frc.robot.Subsystems.Wrist;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
-  private final Wrist wrist = new Wrist();
   private final CommandXboxController driver, operator;
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
   private final CoralSlide coralSlide = new CoralSlide();
+  private final Wrist wrist = new Wrist(coralSlide.wristEncoder());
   private final DriveSubsystem drivetrain = new DriveSubsystem();
   
   public RobotContainer() {
@@ -51,12 +51,14 @@ public class RobotContainer {
   private boolean collectCoralRequest = false;
 
   private void configureBindings() {
+    // Delayed response to Wrist command to collectCoral
     new Trigger(() -> collectCoralRequest).and(slideCenterTrigger)
     .onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral"))
     .alongWith(new InstantCommand(() -> collectCoralRequest = false)));
 
+    //  for when to allow the Slide controls
     Trigger safeToSlide = 
-      new Trigger(() -> coralSlide.WristPosition() > OperatorConstants.safeToSlide);
+      new Trigger(() -> wrist.getPosition() > OperatorConstants.safeToSlide);
 
 // Wrist commands:
     operator.button(3).onTrue(coralSlide.goCenter()
