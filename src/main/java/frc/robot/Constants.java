@@ -159,6 +159,9 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
     public static final double kDriveDeadband = 0.05;
+
+    // wrist to slide interlock:
+    public static final double safeToSlide = .5;//TODO: value for safeToSlide
   }
 
   //Put new Constant classes here.
@@ -173,7 +176,8 @@ public final class Constants
 	  public static final double kP = .1;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double gearing = 20/1;
+    public static final double gearing = 45./1,
+      inchPerRotation = /* 25./4 */1.893*Math.PI;
     public static final double maxVelocity = 0, // in/sec
       maxAcceleration = 0, // in/sec^2
       gravityCompensator = 0; // Volts
@@ -206,12 +210,13 @@ public final class Constants
   public static class SlideConstants {
 
     public static final int motorID = 12;
-    public static final double kP = .1;
+    public static final double kP = .4;
     public static final double gearRatio = 25/1;
     public static final double screwRatio = 1/1; // in / rotation
 	  public static final double centerPos = 0;
-    public static final double leftPos = -12/2; //inches
-    public static final double rightPos = 12/2;
+    public static final double width = 13.75;
+    public static final double leftPos = -width/2; //inches
+    public static final double rightPos = width/2;
   
   }
 
@@ -231,6 +236,8 @@ public final class Constants
     public static final double L4Position = 0.5 * 360; //Turns volts to angles
     public static final double L23Position = 0.396 * 360; //Turns volts to angles
     public static final double algaeIntake = 0.34 * 360;  //Turns volts to angles
+	  public static final double posTolerance = 0,
+                      velTolerance = 0; //TODO: set tolerance
   }
 
  

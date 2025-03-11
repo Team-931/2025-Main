@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
@@ -20,11 +22,11 @@ import frc.robot.Subsystems.Wrist;
 
 public class RobotContainer {
   private final Elevator elevator = new Elevator();
-  private final Wrist wrist = new Wrist();
   private final CommandXboxController driver, operator;
   private final AlgaeIntake algaeIntake = new AlgaeIntake();
   private final CoralIntake coralIntake = new CoralIntake();
   private final CoralSlide coralSlide = new CoralSlide();
+  private final Wrist wrist = new Wrist(coralSlide.wristEncoder());
   private final DriveSubsystem drivetrain = new DriveSubsystem();
   
   public RobotContainer() {
@@ -43,9 +45,24 @@ public class RobotContainer {
         );
   }
 
-  private void configureBindings() {
+  private Trigger slideLeftTrigger = coralIntake.slideLeftLimit(),
+  slideRightTrigger = coralIntake.slideRightLimit(),
+  slideCenterTrigger = coralIntake.slideCentered();
+  private boolean collectCoralRequest = false;
 
-    operator.button(3).onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral")));
+  private void configureBindings() {
+    // Delayed response to Wrist command to collectCoral
+    new Trigger(() -> collectCoralRequest).and(slideCenterTrigger)
+    .onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral"))
+    .alongWith(new InstantCommand(() -> collectCoralRequest = false)));
+
+    //  for when to allow the Slide controls
+    Trigger safeToSlide = 
+      new Trigger(() -> wrist.getPosition() > OperatorConstants.safeToSlide);
+
+// Wrist commands:
+    operator.button(3).onTrue(coralSlide.goCenter()
+    .alongWith(new InstantCommand(() -> collectCoralRequest = true)));
     operator.button(4).onTrue(wrist.runOnce(() -> wrist.setWristPosition("bargePos")));
     operator.button(5).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L4Pos")));
     if (elevator.getHeight() == 1) {
@@ -55,6 +72,7 @@ public class RobotContainer {
       operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L23Pos")));
     }
 
+    //AlgaeIntake commands:
     operator.button(8)
       .onTrue(algaeIntake.in())
       .onFalse(algaeIntake.stop());
@@ -63,6 +81,8 @@ public class RobotContainer {
       .onFalse(algaeIntake.stop());
 
     algaeIntake.stopOnAlgaeBinding();
+
+    //CoralIntake commands:
     coralIntake.stopOnCoralBinding();
 
     operator.button(2)
@@ -72,15 +92,23 @@ public class RobotContainer {
      .onTrue(coralIntake.out())
      .onFalse(coralIntake.stop());
 
-    operator.axisLessThan(0, -.5).onTrue(coralSlide.goLeft());
+     //Slide commands:
+    operator.axisLessThan(0, -.5)
+    .and(safeToSlide)
+    .onTrue(coralSlide.goLeft());
     operator.axisGreaterThan(0, .5).onTrue(coralSlide.goCenter());
-    operator.axisGreaterThan(1, .5).onTrue(coralSlide.goRight());
+    operator.axisGreaterThan(1, .5)
+    .and(safeToSlide)
+    .onTrue(coralSlide.goRight());
+    // response to the slide hitting a limit switch
+    slideLeftTrigger.onTrue(coralSlide.resetLeft());
+    slideRightTrigger.onTrue(coralSlide.resetRight());
 
+  // response to elevator control buttons
     operator.button(12).onTrue(elevator.runOnce(()->elevator.SetLevel(1)));
     operator.button(11).onTrue(elevator.runOnce(()->elevator.SetLevel(2)));
     operator.button(10).onTrue(elevator.runOnce(()->elevator.SetLevel(3)));
     operator.button(9).onTrue(elevator.runOnce(()->elevator.SetLevel(4)));
-    
   }
 
   public Command getAutonomousCommand() {

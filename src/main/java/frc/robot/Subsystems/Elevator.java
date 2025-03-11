@@ -57,8 +57,8 @@ public Elevator () {
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(50)
     .inverted(true)
-    .encoder.positionConversionFactor(1/ElevatorConstants.gearing)
-        .velocityConversionFactor(1/ElevatorConstants.gearing/60);
+    .encoder.positionConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing)
+        .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
     leftConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
@@ -69,8 +69,8 @@ public Elevator () {
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(50)
     .inverted(false)
-    .encoder.positionConversionFactor(1/ElevatorConstants.gearing)
-        .velocityConversionFactor(1/ElevatorConstants.gearing/60);
+    .encoder.positionConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing)
+        .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
     rightConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)

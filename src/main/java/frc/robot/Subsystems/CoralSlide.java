@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -25,9 +26,22 @@ public class CoralSlide extends SubsystemBase {
         .smartCurrentLimit(20)
         .inverted(true)
         .encoder.positionConversionFactor(1/SlideConstants.gearRatio/SlideConstants.screwRatio);
+        config.limitSwitch
+            .forwardLimitSwitchEnabled(false)
+            .reverseLimitSwitchEnabled(false);
+        config.softLimit
+            .forwardSoftLimitEnabled(true)
+            .forwardSoftLimit(SlideConstants.rightPos)
+            .reverseSoftLimitEnabled(true)
+            .reverseSoftLimit(SlideConstants.leftPos);
         config.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             .p(SlideConstants.kP);
+        
+        config.absoluteEncoder
+            .zeroCentered(false)
+            .inverted(false);
+            
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -47,4 +61,24 @@ public class CoralSlide extends SubsystemBase {
         return runOnce(() -> goToPosition(SlideConstants.rightPos));
     }
     
+    public Command resetRight() {
+        return runOnce(() -> {
+            motor.getEncoder().setPosition(SlideConstants.rightPos);
+            goToPosition(SlideConstants.rightPos);
+        });
+    }
+    
+    public Command resetLeft() {
+        return runOnce(() -> {motor.getEncoder().setPosition(SlideConstants.leftPos);
+            goToPosition(SlideConstants.leftPos);
+        });
+    }
+    
+    public SparkAbsoluteEncoder wristEncoder() {
+        return motor.getAbsoluteEncoder();
+    }
+/*     public Command resetCenter() {
+        return runOnce(() -> goToPosition(SlideConstants.centerPos));
+    }
+ */    
 }

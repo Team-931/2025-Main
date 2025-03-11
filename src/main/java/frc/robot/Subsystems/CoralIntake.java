@@ -34,10 +34,13 @@ public class CoralIntake extends SubsystemBase {
     coralConfig 
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(20)
-    .inverted(true);
+    .inverted(true)
+    .limitSwitch
+      .forwardLimitSwitchEnabled(false)
+      .reverseLimitSwitchEnabled(false);
     coralConfig.closedLoop
-    .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    .pid(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
+      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+      .pid(CoralConstants.kP, CoralConstants.kI, CoralConstants.kD);
 
     coralMotor.configure(coralConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -82,4 +85,17 @@ public class CoralIntake extends SubsystemBase {
       }
     };
   }
+
+  public Trigger slideRightLimit() {
+    return new Trigger(() -> coralMotor.getForwardLimitSwitch().isPressed());
+  }
+
+  public Trigger slideLeftLimit() {
+    return new Trigger(() -> coralMotor.getReverseLimitSwitch().isPressed());
+  }
+
+  public Trigger slideCentered() {
+    return new Trigger(() -> coralMotor.getAnalog().getPosition() < 1.5 /* V */);
+  }
+
 }
