@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.hardware.DeviceIdentifier;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -214,10 +218,10 @@ public final class Constants
   public static class WristConstants {
     public static final int wristMotorID = 11;
     public static final int absEncoderID = 13;
-    public static final double motorVelocity = 2000;
+    //public static final double motorVelocity = 2000;
     public static final double kP = 1;
     public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kV = 0;
     public static final double gravityCompensation = 0; //This will need to be changed based on how testing goes. 
     public static final double gearRatio = 25/1; //This needs to be updated, this isn't correct for the motor that we have on the bot. 
     //All of these positions are temporarry, they were measured on the absolute encoder but will need tuning later. 
