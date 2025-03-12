@@ -161,7 +161,7 @@ public final class Constants
     public static final double kDriveDeadband = 0.05;
 
     // wrist to slide interlock:
-    public static final double safeToSlide = .5;//TODO: value for safeToSlide
+    public static final double safeToSlide = .85 *.134;//TODO: value for safeToSlide
   }
 
   //Put new Constant classes here.
@@ -224,19 +224,21 @@ public final class Constants
     public static final int wristMotorID = 11;
     public static final int absEncoderID = 13;
     //public static final double motorVelocity = 2000;
-    public static final double kP = 1;
-    public static final double kI = 0;
-    public static final double kV = 0;
-    public static final double gravityCompensation = 0; //This will need to be changed based on how testing goes. 
     public static final double gearRatio = 25/1; //This needs to be updated, this isn't correct for the motor that we have on the bot. 
     //All of these positions are temporarry, they were measured on the absolute encoder but will need tuning later. 
+    public static final double initialPosition = -0.1335;  
     //All measurements were taken in volts and multiplied by 360 to get the angle in degrees.
-    public static final double coralCollectionPosition = 0;  
-    public static final double bargePosition = 0.165 * 360; //Turns volts to angles
-    public static final double L4Position = 0.5 * 360; //Turns volts to angles
-    public static final double L23Position = 0.396 * 360; //Turns volts to angles
-    public static final double algaeIntake = 0.34 * 360;  //Turns volts to angles
-	  public static final double posTolerance = 0,
+    public static final double coralCollectionPosition = -0.1435;  
+    public static final double bargePosition = .13; //Turns volts to angles
+    public static final double L4Position = 0.4865; //Turns volts to angles
+    public static final double L23Position = 0.4185; //Turns volts to angles
+    public static final double algaeIntake = 0.4185;  //Turns volts to angles
+    public static final double kP = 12 /* Volts *// (L4Position - coralCollectionPosition);
+    public static final double kI = 0.1;
+    public static final double kV = 0;
+    public static final double gravityCompensation = -1.;//-.53; //This will need to be changed based on how testing goes. 
+    public static final double maxVel = .3, maxAccel = 5;
+      public static final double posTolerance = 0,
                       velTolerance = 0; //TODO: set tolerance
   }
 

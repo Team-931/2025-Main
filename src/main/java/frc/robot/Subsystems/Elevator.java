@@ -89,6 +89,11 @@ rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
     ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
 
+public void drive(double pwr) {
+    LeftMotor.set(pwr);
+    RightMotor.set(pwr);
+}
+
 public int getHeight () {
     return elevatorLevel;
 }

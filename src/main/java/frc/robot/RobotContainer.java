@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.CoralIntake;
 import frc.robot.Subsystems.CoralSlide;
@@ -43,6 +45,9 @@ public class RobotContainer {
                 circularScale(-MathUtil.applyDeadband(driver.getRightX(), OperatorConstants.kDriveDeadband)),
                 true, false), drivetrain)
         );
+    elevator.setDefaultCommand(new RunCommand( //TODO: take this out!!
+      () -> elevator.drive(-driver.getRightY()), elevator)
+      );
   }
 
   private Trigger slideLeftTrigger = coralIntake.slideLeftLimit(),
@@ -52,24 +57,40 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Delayed response to Wrist command to collectCoral
-    new Trigger(() -> collectCoralRequest).and(slideCenterTrigger)
-    .onTrue(wrist.runOnce(() -> wrist.setWristPosition("collectCoral"))
-    .alongWith(new InstantCommand(() -> collectCoralRequest = false)));
-
+    slideCenterTrigger
+    .onTrue(wrist.runOnce(() -> {
+      if(collectCoralRequest) wrist.setWristPosition("collectCoral");
+      collectCoralRequest = false;
+    }));
+    
     //  for when to allow the Slide controls
     Trigger safeToSlide = 
       new Trigger(() -> wrist.getPosition() > OperatorConstants.safeToSlide);
-
+      
+    safeToSlide.onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("safe slide", true)))
+    .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("safe slide", false)));
+    slideCenterTrigger.onTrue(new InstantCommand(() -> SmartDashboard.putBoolean("safe fold", true)))
+    .onFalse(new InstantCommand(() -> SmartDashboard.putBoolean("safe fold", false)));
+  
 // Wrist commands:
-    operator.button(3).onTrue(coralSlide.goCenter()
-    .alongWith(new InstantCommand(() -> collectCoralRequest = true)));
-    operator.button(4).onTrue(wrist.runOnce(() -> wrist.setWristPosition("bargePos")));
-    operator.button(5).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L4Pos")));
-    if (elevator.getHeight() == 1) {
-      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("algaeintake")));
+    operator.button(3).and(slideCenterTrigger.negate())
+      .onTrue(coralSlide.goCenter()
+      .andThen(new InstantCommand(() -> collectCoralRequest = true))); //keeps from collectCoral until Slide centered
+    operator.button(3).and(slideCenterTrigger)
+      .onTrue(wrist.runOnce(() -> 
+        wrist.setWristPosition("collectCoral")));
+    operator.button(4)
+    .onTrue(wrist.runOnce(() -> wrist.setWristPosition("bargePos"))
+    .andThen(new InstantCommand(() -> collectCoralRequest = false)));
+    operator.button(5).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L4Pos"))
+    .andThen(new InstantCommand(() -> collectCoralRequest = false)));
+    if (true/* elevator.getHeight() == 1 */) {
+      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("algaeintake"))
+      .andThen(new InstantCommand(() -> collectCoralRequest = false)));
     }
     else if (elevator.getHeight() == 2 || elevator.getHeight() == 3) {
-      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L23Pos")));
+      operator.button(6).onTrue(wrist.runOnce(() -> wrist.setWristPosition("L23Pos"))
+      .andThen(new InstantCommand(() -> collectCoralRequest = false)));
     }
 
     //AlgaeIntake commands:

@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -22,7 +23,7 @@ public class Wrist extends SubsystemBase {
 
     //change motor type
     private final TalonFX drivingTalon;
-    private PositionVoltage driveControlRequest = new PositionVoltage(0);
+    private MotionMagicVoltage driveControlRequest = new MotionMagicVoltage(WristConstants.initialPosition);
 
     private SparkLimitSwitch limitSwitch;
 
@@ -64,7 +65,7 @@ public class Wrist extends SubsystemBase {
     //.pid(WristConstants.kP, WristConstants.kI, WristConstants.kD);
 
     // drivingTalon.getConfigurator(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    wristConfig.MotorOutput.Inverted =  InvertedValue.Clockwise_Positive;
+    wristConfig.MotorOutput.Inverted =  InvertedValue.CounterClockwise_Positive;
     wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     wristConfig.CurrentLimits.SupplyCurrentLimit = 70;
     wristConfig.Feedback.SensorToMechanismRatio = WristConstants.gearRatio;//fix this value
@@ -82,8 +83,12 @@ public class Wrist extends SubsystemBase {
         .withKI(WristConstants.kI) 
         .withKV(WristConstants.kV);//slot0 method requires individual changing of kp, ki, and kd
 
+    wristConfig.MotionMagic
+        .withMotionMagicCruiseVelocity(WristConstants.maxVel)
+        .withMotionMagicAcceleration(WristConstants.maxAccel);
+
     drivingTalon.getConfigurator().apply(wristConfig);
-    drivingTalon.getConfigurator().setPosition(WristConstants.coralCollectionPosition);
+    drivingTalon.setPosition(WristConstants.initialPosition);
     }
 
     public void goToWristPosition (double pos) {
@@ -100,7 +105,13 @@ public class Wrist extends SubsystemBase {
     }
 
     public double getPosition() {
-        return m_drivingPosition.getValueAsDouble();
+        return m_drivingPosition.refresh().getValueAsDouble();
+    }
+
+    @Override
+    public void periodic() {
+        if(limitSwitch.isPressed()) 
+            drivingTalon.setControl(driveControlRequest.withLimitReverseMotion(true));
     }
 
 }
