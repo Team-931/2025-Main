@@ -4,11 +4,23 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Subsystems.AlgaeIntake;
@@ -84,7 +96,49 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.kDriveKinematics);
+    final double diagCtr = 13/Math.sqrt(2)/39.4,
+    rectCtr = 13/39.4;
+    double initX = rectCtr/AutoConstants.distanceFudge, initY = -(5.91 + rectCtr)/AutoConstants.distanceFudge;
+    double endX = (.93 + diagCtr)/AutoConstants.distanceFudge, endY = -(3.13 + diagCtr)/AutoConstants.distanceFudge;
+    // An example trajectory to follow. All units in meters.(divide by AutoConstants.distanceFudge)
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(initX, initY, new Rotation2d(0)),
+      List.of(new Translation2d((2*initX+endX)/3, (2*initY + endY)/3),
+            new Translation2d((initX+2*endX)/3, (initY + 2*endY)/3)),
+      new Pose2d(endX, endY, new Rotation2d(-2*Math.PI/8)),//neg y's when blue
+/*         // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(.2, .2), new Translation2d(.4, -.2)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(1, 0, new Rotation2d(0)),
+ */        config);
+
+    var thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        exampleTrajectory,
+        drivetrain::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        drivetrain::setModuleStates,
+        drivetrain);
+
+    // Reset odometry to the starting pose of the trajectory.
+    drivetrain.resetOdometry(exampleTrajectory.getInitialPose());
+    return swerveControllerCommand;
   }
 
   
