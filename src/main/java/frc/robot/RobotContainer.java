@@ -41,7 +41,7 @@ public class RobotContainer {
                 circularScale(-MathUtil.applyDeadband(driver.getLeftY(), OperatorConstants.kDriveDeadband)),  
                 circularScale(-MathUtil.applyDeadband(driver.getLeftX(), OperatorConstants.kDriveDeadband)),
                 circularScale(-MathUtil.applyDeadband(driver.getRightX(), OperatorConstants.kDriveDeadband)),
-                false, false), drivetrain)
+                true, false), drivetrain)
         );
   /*   elevator.setDefaultCommand(new RunCommand( //TODO: take this out!!
       () -> elevator.drive(-MathUtil.applyDeadband(driver.getRightY(), OperatorConstants.kDriveDeadband)), elevator)
