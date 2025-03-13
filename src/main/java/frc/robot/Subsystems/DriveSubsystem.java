@@ -4,7 +4,7 @@
 
 package frc.robot.Subsystems;
 
-//import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -42,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  //private final AHRS m_gyro = new AHRS();
+  private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -72,7 +72,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        /* m_gyro.getRotation2d() */new Rotation2d(),
+        m_gyro.getRotation2d(),
       new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -97,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        /* m_gyro.getRotation2d() */new Rotation2d(),
+        m_gyro.getRotation2d(),
       new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -177,13 +177,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, /* m_gyro.getRotation2d() */new Rotation2d())
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, m_gyro.getRotation2d())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_frontRight.setDesiredState(swerveModuleStates[2]);
+    m_rearLeft.setDesiredState(swerveModuleStates[1]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
@@ -221,7 +221,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    //m_gyro.reset();
+    m_gyro.reset();
   }
 
   /**
@@ -230,15 +230,15 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return 0; //m_gyro.getAngle();
+    return m_gyro.getAngle();
   }
 
   /**
    * Returns the turn rate of the robot.
    *
    * @return The turn rate of the robot, in degrees per second
-   *//* 
+   */ 
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  } */
+  } 
 }

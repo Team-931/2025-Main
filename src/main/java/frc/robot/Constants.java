@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.DeviceIdentifier;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -78,8 +74,8 @@ public final class Constants
 
     // Angular offsets of the modules relative to the chassis in radians
     public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-    public static final double kFrontRightChassisAngularOffset = 0;
-    public static final double kBackLeftChassisAngularOffset = Math.PI;
+    public static final double kFrontRightChassisAngularOffset = Math.PI;
+    public static final double kBackLeftChassisAngularOffset = 0;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     //Falcon CAN IDs
@@ -161,26 +157,30 @@ public final class Constants
     public static final double kDriveDeadband = 0.05;
 
     // wrist to slide interlock:
-    public static final double safeToSlide = .85 *.134;//TODO: value for safeToSlide
+    public static final double safeToSlide = .85 *.134;
+    // wrist to elevator interlock:
+    public static final double safeElevator = .25 ;
   }
 
   //Put new Constant classes here.
   public static class ElevatorConstants {
     public static final int LMotorID = 9;
     public static final int RMotorID = 10;
-    public static final double Level1 = 3.390; //Inches.
-    public static final double Level2 = 4.226;
+    public static final double Level1 = 0;//3.390; //Inches.
+    public static final double Level2 = 7.5;
     public static final double Level3 = 8.224;
-    public static final double Level4 = 16.021;
-    public static final double LevelMAX = 19.875;
-	  public static final double kP = .1;
+    public static final double Level4 = 20.;
+    public static final double BargeLevel = 20.5;
+    public static final double LevelMAX = 21;
+	  public static final double kP = .45;
+
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double gearing = 45./1,
       inchPerRotation = /* 25./4 */1.893*Math.PI;
-    public static final double maxVelocity = 0, // in/sec
-      maxAcceleration = 0, // in/sec^2
-      gravityCompensator = 0; // Volts
+    public static final double maxVelocity = 3500, // in/sec NO!
+      maxAcceleration = 1000, // in/sec^2
+      gravityCompensator = 0.45; //11.5; // Volts
 	
   }
 
@@ -238,8 +238,7 @@ public final class Constants
     public static final double kV = 0;
     public static final double gravityCompensation = -1.;//-.53; //This will need to be changed based on how testing goes. 
     public static final double maxVel = .3, maxAccel = 5;
-      public static final double posTolerance = 0,
-                      velTolerance = 0; //TODO: set tolerance
+      
   }
 
  
