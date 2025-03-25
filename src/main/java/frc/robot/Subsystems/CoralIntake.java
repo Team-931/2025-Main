@@ -58,16 +58,21 @@ public class CoralIntake extends SubsystemBase {
       }) ;
   }
 
+  public Command stopAndMaintain() {
+    return runOnce(()-> {
+      coralPID.setReference(0.35, ControlType.kVoltage); //Changed the value to 1 from 0. 
+      }) ;
+  }
   public Command stop() {
     return runOnce(()-> {
-      coralPID.setReference(0, ControlType.kVoltage);
+      coralPID.setReference(0, ControlType.kVoltage); 
       }) ;
   }
 
   public Trigger caughtOneTrigger = new Trigger(isCoral());
 
   public void stopOnCoralBinding() {
-    caughtOneTrigger.onTrue(stop());
+    caughtOneTrigger.onTrue(stopAndMaintain());
   }
 
   private Timer currentTimer = new Timer();

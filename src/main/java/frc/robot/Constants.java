@@ -1,13 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copyright (c) FIRST and other WPIpinib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.DeviceIdentifier;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -72,8 +68,8 @@ public final class Constants
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     // Angular offsets of the modules relative to the chassis in radians
@@ -161,26 +157,30 @@ public final class Constants
     public static final double kDriveDeadband = 0.05;
 
     // wrist to slide interlock:
-    public static final double safeToSlide = .5;//TODO: value for safeToSlide
+    public static final double safeToSlide = 0.1;
+    // wrist to elevator interlock:
+    public static final double safeElevator = .20 ;
   }
 
   //Put new Constant classes here.
   public static class ElevatorConstants {
-    public static final int LMotorID = 9;
+    public static final int LMotorID = 9;  
     public static final int RMotorID = 10;
-    public static final double Level1 = 3.390; //Inches.
-    public static final double Level2 = 4.226;
-    public static final double Level3 = 8.224;
-    public static final double Level4 = 16.021;
-    public static final double LevelMAX = 19.875;
-	  public static final double kP = .1;
+    public static final double Level1 = 0;//3.390; //Inches.
+    public static final double Level2 = 4.2;
+    public static final double Level3 = 8.4;
+    public static final double Level4 = 17.95;
+    public static final double BargeLevel = 20.5;
+    public static final double LevelMAX = 21;
+	  public static final double kP = .15;
+
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double gearing = 45./1,
       inchPerRotation = /* 25./4 */1.893*Math.PI;
-    public static final double maxVelocity = 0, // in/sec
-      maxAcceleration = 0, // in/sec^2
-      gravityCompensator = 0; // Volts
+    public static final double maxVelocity = 7525, // in/sec NO!
+      maxAcceleration = 2150, // in/sec^2
+      gravityCompensator = 0.0; //11.5; // Volts
 	
   }
 
@@ -224,20 +224,21 @@ public final class Constants
     public static final int wristMotorID = 11;
     public static final int absEncoderID = 13;
     //public static final double motorVelocity = 2000;
-    public static final double kP = 1;
-    public static final double kI = 0;
-    public static final double kV = 0;
-    public static final double gravityCompensation = 0; //This will need to be changed based on how testing goes. 
     public static final double gearRatio = 25/1; //This needs to be updated, this isn't correct for the motor that we have on the bot. 
     //All of these positions are temporarry, they were measured on the absolute encoder but will need tuning later. 
+    public static final double initialPosition = -0.1335;  
     //All measurements were taken in volts and multiplied by 360 to get the angle in degrees.
-    public static final double coralCollectionPosition = 0;  
-    public static final double bargePosition = 0.165 * 360; //Turns volts to angles
-    public static final double L4Position = 0.5 * 360; //Turns volts to angles
-    public static final double L23Position = 0.396 * 360; //Turns volts to angles
-    public static final double algaeIntake = 0.34 * 360;  //Turns volts to angles
-	  public static final double posTolerance = 0,
-                      velTolerance = 0; //TODO: set tolerance
+    public static final double coralCollectionPosition = -0.1435;  
+    public static final double bargePosition = .13; //Turns volts to angles
+    public static final double L4Position = 0.4865; //Turns volts to angles
+    public static final double L23Position = 0.41850; //Turns volts to angles (4180 origionally)
+    public static final double algaeIntake = 0.31;  //Turns volts to angles
+    public static final double kP = 12 /* Volts *// (L4Position - coralCollectionPosition);
+    public static final double kI = 0.1;
+    public static final double kV = 0;
+    public static final double gravityCompensation = -1.;//-.53; //This will need to be changed based on how testing goes. 
+    public static final double maxVel = .5, maxAccel = 6;
+      
   }
 
  

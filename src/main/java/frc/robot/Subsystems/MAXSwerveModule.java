@@ -15,6 +15,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 //import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -141,7 +142,9 @@ public class MAXSwerveModule {
 
     //set idle
     driveConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
+    // if (drivingCANId == 8 || drivingCANId == 4) {
+    //   driveConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    // }
 
 
 
@@ -191,15 +194,15 @@ public class MAXSwerveModule {
    *
    * @param desiredState Desired state with speed and angle.
    */
-  public void setDesiredState(SwerveModuleState desiredState) {
+  public void  setDesiredState(SwerveModuleState desiredState) {
     // Apply chassis angular offset to the desired state.
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(m_chassisAngularOffset));
 
     // Optimize the reference state to avoid spinning further than 90 degrees.
-    SwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
-        new Rotation2d(m_turningEncoder.getPosition()));
+    SwerveModuleState optimizedDesiredState = correctedDesiredState;//SwerveModuleState.optimize(correctedDesiredState,
+       // new Rotation2d(m_turningEncoder.getPosition()));
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     drivingTalon//.set(optimizedDesiredState.speedMetersPerSecond);
