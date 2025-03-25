@@ -72,16 +72,22 @@ public Elevator (StatusSignal<ForwardLimitValue> statusSignal) {
         .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
     leftConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD,0.0);
-        
-        // .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
-        //     .maxAcceleration(ElevatorConstants.maxAcceleration);
-    leftConfig.softLimit
-        .forwardSoftLimitEnabled(true)
-        .forwardSoftLimit(ElevatorConstants.LevelMAX)
-        .reverseSoftLimitEnabled(true)
-        .reverseSoftLimit(0);
-    
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
+        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
+            .maxAcceleration(ElevatorConstants.maxAcceleration);
+
+    rightConfig 
+    .idleMode(IdleMode.kBrake)
+    .smartCurrentLimit(50)
+    .inverted(false)
+    .encoder.positionConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing)
+        .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
+    rightConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
+        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
+            .maxAcceleration(ElevatorConstants.maxAcceleration);
+
     LeftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leftConfig.follow(LeftMotor, true)
     .inverted(false);
@@ -100,12 +106,10 @@ public Elevator (StatusSignal<ForwardLimitValue> statusSignal) {
 } //do setup here, use the gear ratios/
 
 public void goToHeight (double height) {
-    SmartDashboard.putNumber("height request", height);
-leftPID.setReference(height,ControlType.kPosition,
-    ClosedLoopSlot.kSlot0, 0.0, ArbFFUnits.kVoltage);
-    SmartDashboard.putNumber("Height requested", height);
-//rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
- //   ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
+leftPID.setReference(height,ControlType.kMAXMotionPositionControl,
+    ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
+rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
+    ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
 
 public void drive(double pwr) {
