@@ -76,11 +76,11 @@ public Elevator (StatusSignal<ForwardLimitValue> statusSignal) {
 /*         .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
             .maxAcceleration(ElevatorConstants.maxAcceleration);
  */
-leftConfig.softLimit
-    .forwardSoftLimitEnabled(true)
-    .forwardSoftLimit(ElevatorConstants.LevelMAX)
-    .reverseSoftLimitEnabled(true)
-    .reverseSoftLimit(0);
+    leftConfig.softLimit
+        .forwardSoftLimitEnabled(true)
+        .forwardSoftLimit(ElevatorConstants.LevelMAX)
+        .reverseSoftLimitEnabled(true)
+        .reverseSoftLimit(0);
 
     LeftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leftConfig.follow(LeftMotor, true)
