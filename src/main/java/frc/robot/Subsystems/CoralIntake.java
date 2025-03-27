@@ -65,7 +65,7 @@ public class CoralIntake extends SubsystemBase {
   }
   public Command stop() {
     return runOnce(()-> {
-      coralPID.setReference(0, ControlType.kVoltage); 
+      coralPID.setReference(0, ControlType.kVoltage);
       }) ;
   }
 

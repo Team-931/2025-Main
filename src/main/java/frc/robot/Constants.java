@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPIpinib contributors.
+// Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -165,7 +165,7 @@ public final class Constants
 
   //Put new Constant classes here.
   public static class ElevatorConstants {
-    public static final int LMotorID = 9;  
+    public static final int LMotorID = 9;
     public static final int RMotorID = 10;
     public static final double Level1 = 0;//3.390; //Inches.
     public static final double Level2 = 4.2;
@@ -232,7 +232,7 @@ public final class Constants
     public static final double coralCollectionPosition = -0.1435;  
     public static final double bargePosition = .13; //Turns volts to angles
     public static final double L4Position = 0.4865; //Turns volts to angles
-    public static final double L23Position = 0.41850; //Turns volts to angles (4180 origionally)
+    public static final double L23Position = 0.41850; //Turns volts to angles (4180 originally)
     public static final double algaeIntake = 0.31;  //Turns volts to angles
     public static final double kP = 12 /* Volts *// (L4Position - coralCollectionPosition);
     public static final double kI = 0.1;

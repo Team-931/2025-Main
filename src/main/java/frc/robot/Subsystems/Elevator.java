@@ -72,21 +72,15 @@ public Elevator (StatusSignal<ForwardLimitValue> statusSignal) {
         .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
     leftConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
-        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
+        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+/*         .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
             .maxAcceleration(ElevatorConstants.maxAcceleration);
-
-    rightConfig 
-    .idleMode(IdleMode.kBrake)
-    .smartCurrentLimit(50)
-    .inverted(false)
-    .encoder.positionConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing)
-        .velocityConversionFactor(ElevatorConstants.inchPerRotation/ElevatorConstants.gearing/60);
-    rightConfig.closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD)
-        .maxMotion.maxVelocity(ElevatorConstants.maxVelocity)
-            .maxAcceleration(ElevatorConstants.maxAcceleration);
+ */
+leftConfig.softLimit
+    .forwardSoftLimitEnabled(true)
+    .forwardSoftLimit(ElevatorConstants.LevelMAX)
+    .reverseSoftLimitEnabled(true)
+    .reverseSoftLimit(0);
 
     LeftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leftConfig.follow(LeftMotor, true)
