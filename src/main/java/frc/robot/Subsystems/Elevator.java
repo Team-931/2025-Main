@@ -102,8 +102,8 @@ public Elevator (StatusSignal<ForwardLimitValue> statusSignal) {
 public void goToHeight (double height) {
 leftPID.setReference(height,ControlType.kMAXMotionPositionControl,
     ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
-rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
-    ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
+//rightPID.setReference(height,ControlType.kMAXMotionPositionControl,
+  //  ClosedLoopSlot.kSlot0, ElevatorConstants.gravityCompensator, ArbFFUnits.kVoltage);
 }
 
 public void drive(double pwr) {
