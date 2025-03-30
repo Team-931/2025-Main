@@ -22,6 +22,7 @@ import frc.robot.Subsystems.AlgaeIntake;
 import frc.robot.Subsystems.CoralIntake;
 import frc.robot.Subsystems.CoralSlide;
 import frc.robot.Subsystems.DriveSubsystem;
+import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Wrist;
 
@@ -32,7 +33,7 @@ public class RobotContainer {
   private final CoralSlide coralSlide = new CoralSlide();
   private final Wrist wrist = new Wrist(coralSlide.wristLimit());
   private final Elevator elevator = new Elevator(wrist.elevUpperLimit());
-  private final DriveSubsystem drivetrain = new DriveSubsystem();
+  private final Drivetrain drivetrain = new Drivetrain();
   
   public RobotContainer() {
     driver = new CommandXboxController(1);
@@ -57,7 +58,7 @@ public class RobotContainer {
   slideCenterTrigger = coralIntake.slideCentered();
   
   private void configureBindings() {
-    driver.rightBumper().whileTrue(drivetrain.run(drivetrain :: setX));
+   // driver.rightBumper().whileTrue(drivetrain.run(drivetrain :: setX));
         
 
     driver.y().onTrue(drivetrain.runOnce((drivetrain :: zeroHeading)));

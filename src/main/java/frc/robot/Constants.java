@@ -62,6 +62,8 @@ public final class Constants
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
+
+
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(25.5); //values have been adjusted for current bot
     // Distance between centers of right and left wheels on robot
@@ -93,6 +95,14 @@ public final class Constants
     public static final int kRearRightTurningCanId = 5;
 
     public static final boolean kGyroReversed = false;
+
+    public static final double kRotTransFactor = 0.045;
+  }
+
+  public static final class KeepAngle {
+    public static final double kp = 0.50;
+    public static final double ki = 0.0;
+    public static final double kd = 0.0;
   }
 
   public static final class ModuleConstants {
@@ -118,6 +128,7 @@ public final class Constants
         / kDrivingMotorReduction; // meters
     public static final double kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * Math.PI)
         / kDrivingMotorReduction) / 60.0; // meters per second
+    public static final double kToMeters = (1.0 / kDrivingMotorReduction) * kWheelDiameterMeters * Math.PI;
 
     public static final double kTurningEncoderPositionFactor = (2 * Math.PI); // radians
     public static final double kTurningEncoderVelocityFactor = (2 * Math.PI) / 60.0; // radians per second
