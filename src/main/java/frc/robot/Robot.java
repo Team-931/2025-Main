@@ -18,15 +18,22 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    //LimelightHelpers.setStreamMode_PiPSecondary("limelight-right");
   }
-
+  Binocular binoc = new Binocular();
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("left targets", LimelightHelpers.getTargetCount("limelight-left"));
     SmartDashboard.putNumber("left id", LimelightHelpers.getFiducialID("limelight-left"));
+    SmartDashboard.putNumber("left x", LimelightHelpers.getTX("limelight-left"));
+    
     SmartDashboard.putNumber("right targets", LimelightHelpers.getTargetCount("limelight-right"));
     SmartDashboard.putNumber("right id", LimelightHelpers.getFiducialID("limelight-right"));
+    SmartDashboard.putNumber("right x", LimelightHelpers.getTX("limelight-right"));
+    binoc.readTargets();
+    SmartDashboard.putNumber("distance", binoc.forwardDist(1));
+    SmartDashboard.putNumber("right dist", binoc.getRightDist(1));
   }
 
   @Override

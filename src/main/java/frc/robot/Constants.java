@@ -270,5 +270,13 @@ public final class Constants
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
+    public static final class BinocularConstants {
+
+      public static final String lcam = "limelight-left";
+      public static final String rcam = "limelight-right";
+      public static final double width = 24.5;
+      public static final int targetCount = 22;
+      
+    }
 }
  

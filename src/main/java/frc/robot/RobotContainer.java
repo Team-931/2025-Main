@@ -71,7 +71,7 @@ public class RobotContainer {
     
     //  for when to allow the Slide and Elevator controls
     Trigger safeToSlide = 
-      new Trigger(() -> wrist.getPosition() > OperatorConstants.safeToSlide),
+      new Trigger(() -> true/* wrist.getPosition() > OperatorConstants.safeToSlide */),
         safeToFold = 
       new Trigger(() -> elevator.getHeight() < OperatorConstants.safeElevator);
       
